@@ -24,6 +24,12 @@
               "executable": {
                 "type": "string"
               },
+              "getVersionArgs": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
               "versionRegex": {
                 "type": "string"
               },
