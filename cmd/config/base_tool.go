@@ -2,7 +2,6 @@ package config
 
 import (
 	"errors"
-	"fmt"
 	"os/exec"
 	"regexp"
 	"strings"
@@ -18,9 +17,10 @@ var (
 type BaseTool struct {
 	Name string `mapstructure:"name"`
 
-	Executable     string   `mapstructure:"executable"`
-	GetVersionArgs []string `mapstructure:"getVersionArgs"`
-	VersionRegex   string   `mapstructure:"versionRegex"`
+	Executable     string            `mapstructure:"executable"`
+	GetVersionArgs []string          `mapstructure:"getVersionArgs"`
+	VersionRegex   string            `mapstructure:"versionRegex"`
+	ChangeVersions map[string]string `mapstructure:"changeVersions"`
 
 	InstallUrl        string `mapstructure:"installUrl"`
 	UnixInstallUrl    string `mapstructure:"unixInstallUrl"`
@@ -30,35 +30,36 @@ type BaseTool struct {
 	PackageManagers map[string]string `mapstructure:"packageManagers"`
 }
 
-func (tool BaseTool) Verify() error {
+func (tool BaseTool) Verify() (string, error) {
 	// Check installation
 	toolPath, err := tool.getPath()
 	if err != nil {
-		return err
+		return "", err
 	}
 	if toolPath == "" {
-		return NotInPathError
+		return "", NotInPathError
 	}
 
 	// Check version
+	var installedVersion string
 	if tool.VersionRegex != "" {
-		installedVersion, err := tool.getVersion(toolPath)
+		installedVersion, err = tool.getVersion(toolPath)
 		log.Debug(Debug, "%s's version: %s", tool.Executable, installedVersion)
 		if err != nil {
-			return err
+			return "", err
 		}
 		versionRegex, err := regexp.Compile(tool.VersionRegex)
 		if err != nil {
-			return err
+			return "", err
 		}
 		log.Debug(Debug, "Comparing %s to /%s/", installedVersion, versionRegex)
 		if !versionRegex.MatchString(installedVersion) {
 			log.Debug(Debug, "Version mismatch: %s vs /%s/", installedVersion, versionRegex)
-			return WrongVersionError
+			return installedVersion, WrongVersionError
 		}
 	}
 
-	return nil
+	return installedVersion, nil
 }
 
 func (tool BaseTool) DisplayName() string {
@@ -69,8 +70,7 @@ func (tool BaseTool) DisplayName() string {
 }
 
 func (tool BaseTool) AttemptInstall() error {
-	fmt.Println("    Not installed")
-	return errors.New("BaseTool.AttemptInstall not implemented")
+	return NotInPathError
 }
 
 func (tool BaseTool) getPath() (string, error) {

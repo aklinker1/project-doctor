@@ -12,7 +12,7 @@ type Project struct {
 }
 
 type Tool interface {
-	Verify() error
+	Verify() (string, error)
 	DisplayName() string
 	AttemptInstall() error
 }

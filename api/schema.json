@@ -53,9 +53,23 @@
                 }
               },
               "installOptions": {
+                "$comment": "A map of possible executables to their arguments used to install the tool. If the key is on your path, it will be shown as an option to run",
                 "type": "object",
                 "additionalProperties": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "changeVersions": {
+                "$comment": "A map of possible executables to their arguments used to change the current version that is installed. If the key is on your path, it will be shown as an option to run",
+                "type": "object",
+                "additionalProperties": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 }
               }
             }

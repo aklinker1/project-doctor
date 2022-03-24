@@ -16,6 +16,7 @@ func doctor(cmd *cobra.Command, args []string) {
 
 	fmt.Println(log.SectionHeader("Tools"))
 	project := config.ProjectConfig
+	toolErrors := []error{}
 	for _, toolJson := range project.Tools {
 		tool := config.ParseTool(toolJson)
 		status := tool.DisplayName
@@ -23,12 +24,26 @@ func doctor(cmd *cobra.Command, args []string) {
 		// Do the work
 		stop, spin := log.BrailSpinner(status)
 		go spin()
-		err := tool.Verify()
+		currentVersion, err := tool.Verify()
 		stop(err)
 
 		if errors.Is(err, config.NotInPathError) {
+			fmt.Println("    Not installed")
 			err = tool.AttemptInstall()
 		}
-		log.CheckFatal(err)
+		if errors.Is(err, config.WrongVersionError) {
+			fmt.Printf("    Installed version: %s\n", currentVersion)
+		}
+		if err != nil {
+			fmt.Println("    Error:", err)
+			toolErrors = append(toolErrors, err)
+		}
+	}
+	if len(toolErrors) > 0 {
+		plural := "s"
+		if len(toolErrors) == 1 {
+			plural = ""
+		}
+		log.CheckFatal(fmt.Errorf("Found problems%s with %d tool%s", plural, len(toolErrors), plural))
 	}
 }
