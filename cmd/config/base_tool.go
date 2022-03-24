@@ -29,15 +29,21 @@ type BaseTool struct {
 }
 
 func (tool BaseTool) Verify() error {
+	defaultShell := exec.Shell()
+
+	return tool.verifyShell(defaultShell)
+}
+
+func (tool BaseTool) verifyShell(shell string) error {
 	// Check installation
-	toolPath := tool.getPath()
+	toolPath := exec.Which(shell, tool.Executable)
 	if toolPath == "" {
 		return NotInPathError
 	}
 
 	// Check version
 	if tool.VersionRegex != "" {
-		installedVersion, err := tool.getVersion(toolPath)
+		installedVersion, err := exec.Command(shell, tool.GetVersion)
 		log.Debug("%s's version: %s", tool.Executable, installedVersion)
 		if err != nil {
 			return err
@@ -65,16 +71,4 @@ func (tool BaseTool) DisplayName() string {
 
 func (tool BaseTool) AttemptInstall() error {
 	return nil
-}
-
-func (tool BaseTool) getPath() string {
-	return exec.Which(exec.Shell(), tool.Executable)
-}
-
-func (tool BaseTool) getVersion(toolPath string) (string, error) {
-	output, err := exec.Command(exec.Shell(), "-c", tool.GetVersion)
-	if err != nil {
-		return "", err
-	}
-	return output, nil
 }
