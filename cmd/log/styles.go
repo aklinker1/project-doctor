@@ -17,5 +17,5 @@ var Error = ErrorStyle.Style
 var DimStyle = chalk.Dim
 var Dim = DimStyle.TextStyle
 
-var LoadingStyle = chalk.Cyan.NewStyle()
+var LoadingStyle = chalk.Cyan.NewStyle().WithTextStyle(chalk.Bold).WithBackground(chalk.ResetColor)
 var Loading = LoadingStyle.Style
