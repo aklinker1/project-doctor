@@ -79,6 +79,7 @@ func (tool BaseTool) getPath() (string, error) {
 	log.Debug(Debug, "Output: %s", out)
 	if err != nil {
 		// Assume errors mean it's not installed
+		log.Debug(Debug, "which command errorred out: %v", err)
 		return "", nil
 	}
 	return strings.TrimSpace(string(out)), nil
