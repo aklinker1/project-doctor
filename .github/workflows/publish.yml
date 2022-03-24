@@ -74,8 +74,37 @@ jobs:
 
   publish:
     name: Publish Binaries
-    runs-on: ubuntu-20.04
     needs: [release]
+    runs-on: ubuntu-20.04
+    strategy:
+      # os - matches `go tool dist list`, an os that go supports and works with the install command
+      # download_arch - matches `uname -m`, arch needed for install command
+      # build_arch - matches `go tool dist list`, arch supported by go
+      matrix:
+        include:
+          # List same as https://github.com/docker/compose/releases/tag/v2.3.3
+          - os: darwin
+            download_arch: aarch64
+            build_arch: arm64
+          - os: darwin
+            download_arch: x86_64
+            build_arch: amd64
+          - os: linux
+            download_arch: aarch64
+            build_arch: arm64
+          - os: linux
+            download_arch: armv7
+            build_arch: arm
+          - os: linux
+            download_arch: s390x
+            build_arch: s390x
+          - os: linux
+            download_arch: x86_64
+            build_arch: "386"
+          - os: windows
+            download_arch: x86_64
+            build_arch: "386"
+            extension: .exe
     steps:
       - name: Install Go 1.17
         uses: actions/setup-go@v1
@@ -84,6 +113,11 @@ jobs:
 
       - name: Checkout Repo
         uses: actions/checkout@v2
+
+      - name: Debug Virtual Machine
+        run: |
+          uname -s
+          uname -m
 
       - uses: actions/cache@v3
         with:
@@ -95,12 +129,12 @@ jobs:
             ${{ runner.os }}-go-
 
       - name: Build
-        run: make build
+        run: |
+          GOOS=${{ matrix.os }} GOARCH=${{ matrix.build_arch }} go build -o bin/doctor main.go
 
       - name: Build Details
         id: build_details
-        run: |
-          echo "::set-output name=variant::v${{ needs.release.outputs.version }}-$(uname -s)-$(uname -m)"
+        run: echo "::set-output name=variant::${{ matrix.os }}-${{ matrix.download_arch }}${{ matrix.extension }}"
 
       - name: Upload To New Release
         uses: actions/upload-release-asset@v1
@@ -112,12 +146,21 @@ jobs:
           asset_name: doctor-${{ steps.build_details.outputs.variant }}
           asset_content_type: application/octet-stream
 
-      - name: Upload To Downloads Release
+      # This step doesn't fail if the asset is not present
+      - name: Remove Asset from Latest
+        uses: flcdrg/remove-release-asset-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          release_id: 62721291
+          asset_name: doctor-${{ steps.build_details.outputs.variant }}
+
+      - name: Upload To Latest
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: https://uploads.github.com/repos/aklinker1/project-doctor/releases/62689370/assets{?name,label}
+          upload_url: https://uploads.github.com/repos/aklinker1/project-doctor/releases/62721291/assets{?name,label}
           asset_path: bin/doctor
           asset_name: doctor-${{ steps.build_details.outputs.variant }}
           asset_content_type: application/octet-stream
