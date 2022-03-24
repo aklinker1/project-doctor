@@ -2,7 +2,12 @@ package config
 
 import (
 	"errors"
-	"time"
+	"fmt"
+	"os/exec"
+)
+
+var (
+	NotInPathError = errors.New("Executable is not in your $PATH")
 )
 
 type BaseTool struct {
@@ -19,8 +24,14 @@ type BaseTool struct {
 }
 
 func (tool BaseTool) Verify() error {
-	time.Sleep(2 * time.Second)
-	return errors.New("BaseTool.Verify not implemented")
+	toolPath, err := tool.getPath()
+	if err != nil {
+		return err
+	}
+	if toolPath == "" {
+		return NotInPathError
+	}
+	return nil
 }
 
 func (tool BaseTool) DisplayName() string {
@@ -28,4 +39,17 @@ func (tool BaseTool) DisplayName() string {
 		return tool.Name
 	}
 	return tool.Executable
+}
+
+func (tool BaseTool) AttemptInstall() error {
+	fmt.Println("    Not installed")
+	return errors.New("BaseTool.AttemptInstall not implemented")
+}
+
+func (tool BaseTool) getPath() (string, error) {
+	out, err := exec.Command("which", tool.Executable).Output()
+	if err != nil {
+		return "", nil
+	}
+	return string(out), nil
 }

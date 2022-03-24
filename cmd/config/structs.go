@@ -14,6 +14,7 @@ type Project struct {
 type Tool interface {
 	Verify() error
 	DisplayName() string
+	AttemptInstall() error
 }
 
 // ToolJson is the raw map that data is loaded into as JSON. Use `ParseTool` to convert this into an

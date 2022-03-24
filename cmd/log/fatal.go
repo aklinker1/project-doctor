@@ -11,11 +11,7 @@ func CheckFatal(err interface{}) {
 	}
 
 	println()
-	fmt.Fprintln(
-		os.Stderr,
-		"Error:",
-		err,
-	)
+	fmt.Fprintf(os.Stderr, Error("%v\n"), err)
 	println()
 	os.Exit(1)
 }

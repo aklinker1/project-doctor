@@ -5,6 +5,9 @@ import "github.com/ttacon/chalk"
 var TitleStyle = chalk.Bold
 var Title = TitleStyle.TextStyle
 
+var SectionHeaderStyle = chalk.Blue.NewStyle().WithTextStyle(chalk.Bold).WithBackground(chalk.ResetColor)
+var SectionHeader = SectionHeaderStyle.Style
+
 var SuccessStyle = chalk.Green.NewStyle().WithTextStyle(chalk.Bold).WithBackground(chalk.ResetColor)
 var Success = SuccessStyle.Style
 

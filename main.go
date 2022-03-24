@@ -7,7 +7,5 @@ package main
 import "github.com/aklinker1/project-doctor/cmd"
 
 func main() {
-	println()
 	cmd.Execute()
-	println()
 }
