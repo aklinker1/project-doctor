@@ -1,26 +1,26 @@
 tools:
   - name: Go v17
-    executable: go2
-    getVersionArgs: [version]
-    versionRegex: "go1\\.17\\."
+    executable: go
+    getVersion: go version
+    versionRegex: go1\.17\.
     installUrls:
       default: https://go.dev/blog/go1.18beta2
     installOptions:
-      apt: [install, golang-1.17.1]
-      apt-get: [install, golang-1.17.1]
-      brew: [install, golang]
+      apt: sudo apt install golang-1.17.1
+      apt-get: sudo install golang-1.17.1
+      brew: brew install golang
   - name: NodeJS v14
     executable: node
-    getVersionArgs: [--version]
-    versionRegex: "^v14"
+    getVersion: node --version
+    versionRegex: ^v14
     installUrls:
       default: https://go.dev/blog/go1.18beta2
     installOptions:
-      apt: [install, golang-1.17.1]
-      apt-get: [apt-get, install, golang-1.17.1]
-      brew: [install, golang]
+      apt: sudo apt install golang-1.17.1]
+      apt-get: sudo apt-get install golang-1.17.1]
+      brew: brew install golang
     changeVersions:
-      nvm: [use, "14"]
+      nvm: nvm use 14
 #
 # commands:
 #   - name: Compile executable

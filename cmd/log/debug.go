@@ -5,8 +5,12 @@ import (
 	"os"
 )
 
-func Debug(debugging bool, format string, args ...interface{}) {
-	if !debugging {
+var (
+	IsDebugging bool
+)
+
+func Debug(format string, args ...interface{}) {
+	if !IsDebugging {
 		return
 	}
 

@@ -23,12 +23,12 @@ var (
 
 func validateProject(allConfig map[string]interface{}) error {
 	ctx := context.Background()
-	log.Debug(Debug, "Validating config: %v", allConfig)
+	log.Debug("Validating config: %v", allConfig)
 	bytesToValidate, err := jsoniter.Marshal(allConfig)
 	if err != nil {
 		return err
 	}
-	log.Debug(Debug, "Validating config json: %s", string(bytesToValidate))
+	log.Debug("Validating config json: %s", string(bytesToValidate))
 
 	err = loadSchema(ctx)
 	if err != nil {
@@ -37,7 +37,7 @@ func validateProject(allConfig map[string]interface{}) error {
 
 	errs, err := schema.ValidateBytes(ctx, bytesToValidate)
 	if err != nil {
-		log.Debug(Debug, "Validation failed: %v", err)
+		log.Debug("Validation failed: %v", err)
 		return err
 	}
 	if len(errs) > 0 {
@@ -49,17 +49,17 @@ func validateProject(allConfig map[string]interface{}) error {
 	}
 
 	if err != nil {
-		log.Debug(Debug, "Validation failed: %v", err)
+		log.Debug("Validation failed: %v", err)
 		return err
 	}
-	log.Debug(Debug, "Validation succeeded")
+	log.Debug("Validation succeeded")
 	return nil
 }
 
 func loadSchema(ctx context.Context) error {
-	log.Debug(Debug, "Fetching schema from: %s", schemaUrl)
+	log.Debug("Fetching schema from: %s", schemaUrl)
 	if schema != nil {
-		log.Debug(Debug, "Schema has already been fetched")
+		log.Debug("Schema has already been fetched")
 		return nil
 	}
 
@@ -74,13 +74,13 @@ func loadSchema(ctx context.Context) error {
 		return err
 	}
 
-	log.Debug(Debug, "JSON Schema: %s", strings.TrimSpace(string(bytes)))
+	log.Debug("JSON Schema: %s", strings.TrimSpace(string(bytes)))
 	schema = &jsonschema.Schema{}
 	return json.Unmarshal(bytes, schema)
 }
 
 func getRemoteSchema(ctx context.Context) ([]byte, error) {
-	log.Debug(Debug, "Loading schema from: %s", schemaUrl)
+	log.Debug("Loading schema from: %s", schemaUrl)
 	res, err := http.Get(schemaUrl)
 	if err != nil {
 		return nil, err
@@ -94,6 +94,6 @@ func getRemoteSchema(ctx context.Context) ([]byte, error) {
 
 func getLocalSchema() ([]byte, error) {
 	filename := path.Join(Cwd, "api", "schema.json")
-	log.Debug(Debug, "Loading schema from: file://%s", filename)
+	log.Debug("Loading schema from: file://%s", filename)
 	return ioutil.ReadFile(filename)
 }

@@ -7,6 +7,7 @@ require (
 	github.com/json-iterator/go v1.1.12
 	github.com/mitchellh/mapstructure v1.4.3
 	github.com/qri-io/jsonschema v0.2.1
+	github.com/riywo/loginshell v0.0.0-20200815045211-7d26008be1ab
 	github.com/spf13/cobra v1.4.0
 	github.com/spf13/cobra-cli v1.3.0
 	github.com/spf13/viper v1.10.1

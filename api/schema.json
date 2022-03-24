@@ -24,11 +24,8 @@
               "executable": {
                 "type": "string"
               },
-              "getVersionArgs": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
+              "getVersion": {
+                "type": "string"
               },
               "versionRegex": {
                 "type": "string"
@@ -53,23 +50,17 @@
                 }
               },
               "installOptions": {
-                "$comment": "A map of possible executables to their arguments used to install the tool. If the key is on your path, it will be shown as an option to run",
+                "$comment": "A map of possible executables to their commands used to install the tool. If the key is on your path, it will be shown as an option to run",
                 "type": "object",
                 "additionalProperties": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
+                  "type": "string"
                 }
               },
               "changeVersions": {
-                "$comment": "A map of possible executables to their arguments used to change the current version that is installed. If the key is on your path, it will be shown as an option to run",
+                "$comment": "A map of possible executables to their commands used to change the current version that is installed. If the key is on your path, it will be shown as an option to run",
                 "type": "object",
                 "additionalProperties": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
+                  "type": "string"
                 }
               }
             }

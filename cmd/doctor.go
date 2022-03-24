@@ -24,15 +24,15 @@ func doctor(cmd *cobra.Command, args []string) {
 		// Do the work
 		stop, spin := log.BrailSpinner(status)
 		go spin()
-		currentVersion, err := tool.Verify()
+		err := tool.Verify()
 		stop(err)
 
-		if errors.Is(err, config.NotInPathError) {
-			fmt.Println("    Not installed")
-			err = tool.AttemptInstall()
-		}
+		// if errors.Is(err, config.NotInPathError) {
+		// 	fmt.Println("    Not installed")
+		// 	err = tool.AttemptInstall()
+		// }
 		if errors.Is(err, config.WrongVersionError) {
-			fmt.Printf("    Installed version: %s\n", currentVersion)
+			fmt.Printf("    Installed version: %s\n", config.AsWrongVersionError(err).InstalledVersion)
 		}
 		if err != nil {
 			fmt.Println("    Error:", err)

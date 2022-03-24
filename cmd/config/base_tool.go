@@ -2,23 +2,21 @@ package config
 
 import (
 	"errors"
-	"os/exec"
 	"regexp"
-	"strings"
 
+	"github.com/aklinker1/project-doctor/cmd/exec"
 	"github.com/aklinker1/project-doctor/cmd/log"
 )
 
 var (
-	NotInPathError    = errors.New("Executable is not in your $PATH")
-	WrongVersionError = errors.New("Executable is installed, but does not match the required version")
+	NotInPathError = errors.New("Executable is not in your $PATH")
 )
 
 type BaseTool struct {
 	Name string `mapstructure:"name"`
 
 	Executable     string            `mapstructure:"executable"`
-	GetVersionArgs []string          `mapstructure:"getVersionArgs"`
+	GetVersion     string            `mapstructure:"getVersion"`
 	VersionRegex   string            `mapstructure:"versionRegex"`
 	ChangeVersions map[string]string `mapstructure:"changeVersions"`
 
@@ -30,36 +28,32 @@ type BaseTool struct {
 	PackageManagers map[string]string `mapstructure:"packageManagers"`
 }
 
-func (tool BaseTool) Verify() (string, error) {
+func (tool BaseTool) Verify() error {
 	// Check installation
-	toolPath, err := tool.getPath()
-	if err != nil {
-		return "", err
-	}
+	toolPath := tool.getPath()
 	if toolPath == "" {
-		return "", NotInPathError
+		return NotInPathError
 	}
 
 	// Check version
-	var installedVersion string
 	if tool.VersionRegex != "" {
-		installedVersion, err = tool.getVersion(toolPath)
-		log.Debug(Debug, "%s's version: %s", tool.Executable, installedVersion)
+		installedVersion, err := tool.getVersion(toolPath)
+		log.Debug("%s's version: %s", tool.Executable, installedVersion)
 		if err != nil {
-			return "", err
+			return err
 		}
 		versionRegex, err := regexp.Compile(tool.VersionRegex)
 		if err != nil {
-			return "", err
+			return err
 		}
-		log.Debug(Debug, "Comparing %s to /%s/", installedVersion, versionRegex)
+		log.Debug("Comparing %s to /%s/", installedVersion, versionRegex)
 		if !versionRegex.MatchString(installedVersion) {
-			log.Debug(Debug, "Version mismatch: %s vs /%s/", installedVersion, versionRegex)
-			return installedVersion, WrongVersionError
+			log.Debug("Version mismatch: %s vs /%s/", installedVersion, versionRegex)
+			return NewWrongVersionError(tool, installedVersion)
 		}
 	}
 
-	return installedVersion, nil
+	return nil
 }
 
 func (tool BaseTool) DisplayName() string {
@@ -70,27 +64,17 @@ func (tool BaseTool) DisplayName() string {
 }
 
 func (tool BaseTool) AttemptInstall() error {
-	return NotInPathError
+	return nil
 }
 
-func (tool BaseTool) getPath() (string, error) {
-	log.Debug(Debug, "Executing: which %s", tool.Executable)
-	out, err := exec.Command("which", tool.Executable).Output()
-	log.Debug(Debug, "Output: %s", out)
-	if err != nil {
-		// Assume errors mean it's not installed
-		log.Debug(Debug, "which command errorred out: %v", err)
-		return "", nil
-	}
-	return strings.TrimSpace(string(out)), nil
+func (tool BaseTool) getPath() string {
+	return exec.Which(exec.Shell(), tool.Executable)
 }
 
 func (tool BaseTool) getVersion(toolPath string) (string, error) {
-	log.Debug(Debug, "Executing: %s %v", tool.Executable, tool.GetVersionArgs)
-	out, err := exec.Command(tool.Executable, tool.GetVersionArgs...).Output()
-	log.Debug(Debug, "Output: %s", out)
+	output, err := exec.Command(exec.Shell(), "-c", tool.GetVersion)
 	if err != nil {
 		return "", err
 	}
-	return strings.TrimSpace(string(out)), nil
+	return output, nil
 }
