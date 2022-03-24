@@ -1,0 +1,104 @@
+name: Publish
+on:
+  workflow_dispatch: {}
+
+jobs:
+  verify:
+    name: Verify Code
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Install Go 1.17
+        uses: actions/setup-go@v1
+        with:
+          go-version: 1.17
+
+      - name: Install Node 14
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+
+      - name: Build
+        run: make build
+
+      - name: Run doctor
+        run: USE_LOCAL_SCHEMA=true ./bin/doctor --debug
+
+  release:
+    name: Create Release
+    runs-on: ubuntu-20.04
+    needs: [verify]
+    steps:
+      - name: Install Go 1.17
+        uses: actions/setup-go@v1
+        with:
+          go-version: 1.17
+
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+
+      - name: Create Changelog
+        id: changelog
+        uses: TriPSs/conventional-changelog-action@v3
+        with:
+          output-file: "false"
+          fallback-version: "0.1.0"
+          version-file: meta.json
+          git-user-name: aklinker1
+          git-user-email: aaronklinker1@gmail.com
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        if: ${{ steps.changelog.outputs.skipped == 'false' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.github_token }}
+        with:
+          tag_name: ${{ steps.changelog.outputs.tag }}
+          release_name: ${{ steps.changelog.outputs.tag }}
+          body: ${{ steps.changelog.outputs.clean_changelog }}
+
+  build-for:
+    runs-on: ubuntu-20.04
+    needs: [release]
+    steps:
+      - name: Install Go 1.17
+        uses: actions/setup-go@v1
+        with:
+          go-version: 1.17
+
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+
+      - name: Build
+        run: make build
+
+      - name: Build Details
+        id: build_details
+        run: |
+          echo "::set-output name=os::$(uname -s)\n"
+          echo "::set-output name=arch::$(uname -m)\n"
+
+      - name: Upload To New Release
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./bugsnag-js-windowless-${{ steps.changelog.outputs.version }}.tgz
+          asset_name: bugsnag-js-windowless-${{ steps.changelog.outputs.version }}.tgz
+          asset_content_type: application/gzip
+
+      - name: Upload To Downloads Release
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: https://uploads.github.com/repos/aklinker1/project-doctor/releases/62689370/assets
+          asset_path: bin/doctor
+          asset_name: doctor-${{ steps.build_details.outputs.os }}-${{ steps.build_details.outputs.arch }}
+          asset_content_type: application/octet-stream
