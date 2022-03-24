@@ -40,7 +40,7 @@ func validateProject(allConfig map[string]interface{}) error {
 		return err
 	}
 	if len(errs) > 0 {
-		fmt.Println(log.Error("Invalid config:"))
+		fmt.Println(log.Error("Config failed validation:"))
 		for _, err := range errs {
 			fmt.Println(err)
 		}

@@ -4,7 +4,6 @@ import (
 	"os"
 
 	"github.com/aklinker1/project-doctor/cmd/log"
-	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
 
@@ -16,7 +15,7 @@ func Init() {
 		// Lookup config file
 		var err error
 		Cwd, err = os.Getwd()
-		cobra.CheckErr(err)
+		log.CheckFatal(err)
 		viper.AddConfigPath(Cwd)             // Look in the working directory
 		viper.SetConfigType("yaml")          // Prefer yaml files
 		viper.SetConfigName("doctor.config") // Default config filename without an extension
@@ -31,10 +30,10 @@ func Init() {
 		log.Debug(Debug, "Project as seen by Viper: %+v", projectMap)
 
 		err = validateProject(projectMap)
-		cobra.CheckErr(err)
+		log.CheckFatal(err)
 
 		ProjectConfig, err = ParseProjectConfig(projectMap)
-		cobra.CheckErr(err)
+		log.CheckFatal(err)
 		log.Debug(Debug, "Received config: %+v", ProjectConfig)
 	}
 }

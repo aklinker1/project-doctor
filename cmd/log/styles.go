@@ -2,7 +2,11 @@ package log
 
 import "github.com/ttacon/chalk"
 
-var Title = chalk.Bold.TextStyle
-var Success = chalk.Green.NewStyle().WithTextStyle(chalk.Bold).Style
-var Error = chalk.Red.NewStyle().WithTextStyle(chalk.Bold).WithBackground(chalk.ResetColor).Style
-var Dim = chalk.Dim.TextStyle
+var TitleStyle = chalk.Bold
+var Title = TitleStyle.TextStyle
+var SuccessStyle = chalk.Green.NewStyle().WithTextStyle(chalk.Bold)
+var Success = SuccessStyle.Style
+var ErrorStyle = chalk.Red.NewStyle().WithTextStyle(chalk.Bold).WithBackground(chalk.ResetColor)
+var Error = ErrorStyle.Style
+var DimStyle = chalk.Dim
+var Dim = DimStyle.TextStyle
