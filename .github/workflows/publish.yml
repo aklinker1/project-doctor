@@ -30,6 +30,9 @@ jobs:
     name: Create Release
     runs-on: ubuntu-20.04
     needs: [verify]
+    outputs:
+      version: ${{ steps.changelog.outputs.version }}
+      new_release_upload_url: ${{ steps.create_release.outputs.upload_url }}
     steps:
       - name: Install Go 1.17
         uses: actions/setup-go@v1
@@ -60,7 +63,8 @@ jobs:
           release_name: ${{ steps.changelog.outputs.tag }}
           body: ${{ steps.changelog.outputs.clean_changelog }}
 
-  build-for:
+  publish:
+    name: Publish Binaries
     runs-on: ubuntu-20.04
     needs: [release]
     steps:
@@ -78,27 +82,24 @@ jobs:
       - name: Build Details
         id: build_details
         run: |
-          echo "::set-output name=os::$(uname -s)\n"
-          echo "::set-output name=arch::$(uname -m)\n"
+          echo "::set-output name=variant::v${{ needs.release.outputs.version }}-$(uname -s)-$(uname -m)"
 
       - name: Upload To New Release
-        id: upload-release-asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./bugsnag-js-windowless-${{ steps.changelog.outputs.version }}.tgz
-          asset_name: bugsnag-js-windowless-${{ steps.changelog.outputs.version }}.tgz
-          asset_content_type: application/gzip
+          upload_url: ${{ needs.release.outputs.new_release_upload_url }}
+          asset_path: bin/doctor
+          asset_name: doctor-${{ steps.build_details.outputs.variant }}
+          asset_content_type: application/octet-stream
 
       - name: Upload To Downloads Release
-        id: upload-release-asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: https://uploads.github.com/repos/aklinker1/project-doctor/releases/62689370/assets
+          upload_url: https://uploads.github.com/repos/aklinker1/project-doctor/releases/62689370/assets{?name,label}
           asset_path: bin/doctor
-          asset_name: doctor-${{ steps.build_details.outputs.os }}-${{ steps.build_details.outputs.arch }}
+          asset_name: doctor-${{ steps.build_details.outputs.variant }}
           asset_content_type: application/octet-stream
