@@ -46,13 +46,13 @@ func Spinner(frames []string, status func() string) (func(error), func()) {
 			time.Sleep(sleepDuration)
 			position = (position + 1) % frameCount
 		}
-		wg.Done()
 		if isSuccess() {
 			fmt.Fprintf(w, Success(" ✔ %s\n"), status())
 		} else {
 			fmt.Fprintf(w, Error(" ✘ %s\n"), status())
 		}
 		w.Stop()
+		wg.Done()
 	}
 }
 
