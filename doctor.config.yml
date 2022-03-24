@@ -1,15 +1,21 @@
 tools:
   - name: Go v18 Beta2
-    executable: go1.18beta2
-    versionRegex: ".*go1.18beta2.*"
+    executable: go
+    versionRegex: "go1\\.17\\."
     installUrl: https://go.dev/blog/go1.18beta2
-
-commands:
-  - name: Compile executable
-    command: [make, make b, make build]
-
-  - name: Run against the repo's doctor.config.yml
-    command: [make r, make run]
-
-  - name: Run against a specific config
-    command: go run main.go -c examples/node.yml
+#
+# commands:
+#   - name: Compile executable
+#     command: [make, make b, make build]
+#
+#   - name: Run against the repo's doctor.config.yml
+#     command: [make r, make run]
+#
+#   - name: Same as run, but print all debug logs
+#     command: [make r, make run]
+#
+#   - name: Run against a specific config
+#     command: go run main.go -c examples/node.yml
+#
+#   - name: Cleanup the application's dependencies
+#     command: go mod tidy

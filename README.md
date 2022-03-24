@@ -4,16 +4,13 @@
 <p align="center">✨ Inspired by <code>flutter doctor</code> ✨</p>
 
 ```yaml
-# Add autocomplete to editors that support it
-$schema: https://raw.githubusercontent.com/aklinker1/project-doctor/main/config/schema.json
-
-# Specify requried tools and how to install them
+# Specify required tools and how to install them
 tools:
   - name: NodeJS
     preset: node
     version: 14
 
-# Generate any gitingored files
+# Generate any gitignored files
 files:
   - name: .env
     description: A file containing all the environment variables to configure and run the project locally
@@ -42,7 +39,7 @@ $ doctor
 
 #### Why not just containerize?
 
-Not all projects can be built in docker containers, like iOS apps, and others can be hard to setup. Othertimes you're working on a simple project and dockerizing it is just overkill.
+Not all projects can be built in docker containers, like iOS apps, and others can be hard to setup. Other times you're working on a simple project and dockerizing it is just overkill.
 
 I was tired of writing docs about setting up projects for local development, or troubleshooting someone elses machine when those docs get out of date. With `doctor`, all that is rolled up into a single tool that needs to be installed and single configuration file that is easy to maintain as projects grow/change.
 
@@ -72,7 +69,7 @@ To specify a different configuration file, use `doctor -c path/to/config`.
 
 If you're using an editor that supports JSON/YAML schemas, you can setup error detection and autocomplete.
 
-You don't have to setup this up though, the first thing `doctor` does is validate your config against a schema, so you'll know if you did something wrong. 
+You don't have to setup this up though, the first thing `doctor` does is validate your config against a schema, so you'll know if you did something wrong.
 
 #### JSON
 
@@ -81,7 +78,7 @@ Just add the "`"$schema"` field to your config
 ```jsonc
 // doctor.config.json
 {
-  "$schema": "https://raw.githubusercontent.com/aklinker1/project-doctor/main/config/schema.json",
+  "$schema": "https://raw.githubusercontent.com/aklinker1/project-doctor/main/api/schema.json"
   // ...
 }
 ```
@@ -96,8 +93,8 @@ Editors don't have a standard way of using schemas for YAML files like JSON. Ins
 // settings.json
 {
   "yaml.schemas": {
-    "https://raw.githubusercontent.com/aklinker1/project-doctor/main/config/schema.json": "path/to/doctor.config.yml",
-  },
+    "https://raw.githubusercontent.com/aklinker1/project-doctor/main/api/schema.json": "path/to/doctor.config.yml"
+  }
 }
 ```
 

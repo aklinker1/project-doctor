@@ -7,3 +7,8 @@ run:
 	@echo "──────────"
 	@go run main.go
 	@echo "──────────"
+
+debug:
+	@echo "──────────"
+	@go run main.go --debug
+	@echo "──────────"

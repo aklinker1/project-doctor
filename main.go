@@ -1,11 +1,13 @@
+/*
+Copyright © 2022 NAME HERE <EMAIL ADDRESS>
+
+*/
 package main
 
-import (
-	"fmt"
-
-	"github.com/ttacon/chalk"
-)
+import "github.com/aklinker1/project-doctor/cmd"
 
 func main() {
-	fmt.Println(chalk.Blue.Color("Hello world"))
+	println()
+	cmd.Execute()
+	println()
 }
