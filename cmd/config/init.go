@@ -25,15 +25,15 @@ func Init() {
 
 	// Validate and read in the config
 	if err := viper.ReadInConfig(); err == nil {
-		log.Debug(Debug, "Using project file: %s", viper.ConfigFileUsed())
+		log.Debug("Using project file: %s", viper.ConfigFileUsed())
 		projectMap := viper.AllSettings()
-		log.Debug(Debug, "Project as seen by Viper: %+v", projectMap)
+		log.Debug("Project as seen by Viper: %+v", projectMap)
 
 		err = validateProject(projectMap)
 		log.CheckFatal(err)
 
 		ProjectConfig, err = ParseProjectConfig(projectMap)
 		log.CheckFatal(err)
-		log.Debug(Debug, "Received config: %+v", ProjectConfig)
+		log.Debug("Received config: %+v", ProjectConfig)
 	}
 }

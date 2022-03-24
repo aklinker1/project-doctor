@@ -7,7 +7,6 @@ import (
 
 var (
 	ConfigFile     string
-	Debug          bool
 	Cwd            string
 	ProjectConfig  Project
 	UseLocalSchema bool

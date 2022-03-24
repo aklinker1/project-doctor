@@ -8,6 +8,7 @@ import (
 	"os"
 
 	"github.com/aklinker1/project-doctor/cmd/config"
+	"github.com/aklinker1/project-doctor/cmd/log"
 	"github.com/spf13/cobra"
 )
 
@@ -38,5 +39,5 @@ func init() {
 	cobra.OnInitialize(config.Init)
 
 	rootCmd.Flags().StringVarP(&config.ConfigFile, "config", "c", "", "The path to the project's config file")
-	rootCmd.Flags().BoolVar(&config.Debug, "debug", false, "Print all debug statements")
+	rootCmd.Flags().BoolVar(&log.IsDebugging, "debug", false, "Print all debug statements")
 }
