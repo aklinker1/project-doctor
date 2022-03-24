@@ -1,0 +1,38 @@
+{
+  "$id": "https://raw.githubusercontent.com/aklinker1/project-doctor/main/api/schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "tools": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "title": "RawToolType",
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["executable", "installUrl"],
+            "properties": {
+              "type": {
+                "enum": [null]
+              },
+              "name": {
+                "type": "string"
+              },
+              "executable": {
+                "type": "string"
+              },
+              "versionRegex": {
+                "type": "string"
+              },
+              "installUrl": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}
