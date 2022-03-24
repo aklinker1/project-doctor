@@ -1,8 +1,13 @@
 tools:
-  - name: Go v18 Beta2
+  - name: Go v17
     executable: go
     versionRegex: "go1\\.17\\."
-    installUrl: https://go.dev/blog/go1.18beta2
+    installUrls:
+      default: https://go.dev/blog/go1.18beta2
+    installOptions:
+      apt: sudo apt install golang-1.17.1
+      apt-get: sudo apt-get install golang-1.17.1
+      brew: brew install golang
 #
 # commands:
 #   - name: Compile executable

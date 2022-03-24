@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"path"
 	"strings"
 
 	"github.com/aklinker1/project-doctor/cmd/log"
@@ -15,9 +16,9 @@ import (
 )
 
 var (
-	schemaUrl       = "https://raw.githubusercontent.com/aklinker1/project-doctor/main/api/schema.json"
 	hasLoadedSchema = false
 	schema          *jsonschema.Schema
+	schemaUrl       = "https://raw.githubusercontent.com/aklinker1/project-doctor/main/api/schema.json"
 )
 
 func validateProject(allConfig map[string]interface{}) error {
@@ -61,18 +62,38 @@ func loadSchema(ctx context.Context) error {
 		log.Debug(Debug, "Schema has already been fetched")
 		return nil
 	}
-	res, err := http.Get(schemaUrl)
+
+	var bytes []byte
+	var err error
+	if UseLocalSchema {
+		bytes, err = getLocalSchema()
+	} else {
+		bytes, err = getRemoteSchema(ctx)
+	}
 	if err != nil {
 		return err
+	}
+
+	log.Debug(Debug, "JSON Schema: %s", strings.TrimSpace(string(bytes)))
+	schema = &jsonschema.Schema{}
+	return json.Unmarshal(bytes, schema)
+}
+
+func getRemoteSchema(ctx context.Context) ([]byte, error) {
+	log.Debug(Debug, "Loading schema from: %s", schemaUrl)
+	res, err := http.Get(schemaUrl)
+	if err != nil {
+		return nil, err
 	}
 	bytes, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	log.Debug(Debug, "JSON Schema: %s", strings.TrimSpace(string(bytes)))
-	schema = &jsonschema.Schema{}
-	if err = json.Unmarshal(bytes, schema); err != nil {
-		return err
-	}
-	return nil
+	return bytes, nil
+}
+
+func getLocalSchema() ([]byte, error) {
+	filename := path.Join(Cwd, "api", "schema.json")
+	log.Debug(Debug, "Loading schema from: file://%s", filename)
+	return ioutil.ReadFile(filename)
 }

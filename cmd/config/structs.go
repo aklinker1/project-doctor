@@ -3,46 +3,47 @@ package config
 import (
 	"fmt"
 
+	"github.com/aklinker1/project-doctor/cmd/log"
 	"github.com/mitchellh/mapstructure"
-	"github.com/spf13/cobra"
 )
 
 type Project struct {
-	Tools []Tool `mapstructure:"tools"`
+	Tools []ToolJson `mapstructure:"tools"`
 }
 
-type Tool map[string]interface{}
+type Tool interface {
+	Verify() error
+	DisplayName() string
+}
+
+// ToolJson is the raw map that data is loaded into as JSON. Use `ParseTool` to convert this into an
+// object you can work with
+type ToolJson map[string]interface{}
 
 type ToolType string
 
 const (
-	TOOL_TYPE_RAW    ToolType = "raw"
+	TOOL_TYPE_BASE   ToolType = "base"
 	TOOL_TYPE_PRESET ToolType = "preset"
 )
 
-type RawToolType struct {
-	Type ToolType `mapstructure:"type"`
-}
-
-type PresetToolType struct {
-	Type   ToolType `mapstructure:"type"`
-	Preset string   `mapstructure:"preset"`
-}
-
-func AsRaw(tool Tool) (result RawToolType) {
-	typeField, hasTypeField := tool["type"]
+// Parse tool returns a tool that includes operations like validate
+func ParseTool(toolJson ToolJson) Tool {
+	typeField, hasTypeField := toolJson["type"]
 	if !hasTypeField {
-		typeField = TOOL_TYPE_RAW
+		typeField = TOOL_TYPE_BASE
 	}
 	typeStr, ok := typeField.(ToolType)
 	if !ok {
-		cobra.CheckErr(fmt.Errorf("Unknown tool.type = %+v", typeField))
+		log.CheckFatal(fmt.Errorf("Unknown tool.type = %+v", typeField))
 	}
-	if typeStr == TOOL_TYPE_RAW {
-		mapstructure.Decode(tool, &result)
-		return result
-	} else {
-		cobra.CheckErr(fmt.Errorf("tool.type was not %s (was %s)", TOOL_TYPE_RAW, typeStr))
-		return result
+	switch typeStr {
+	case TOOL_TYPE_BASE:
+		raw := BaseTool{}
+		mapstructure.Decode(toolJson, &raw)
+		return raw
+	default:
+		log.CheckFatal(fmt.Errorf("tool.type was not %s (was %s)", TOOL_TYPE_BASE, typeStr))
+		return nil
 	}
 }

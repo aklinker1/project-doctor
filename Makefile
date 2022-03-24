@@ -5,10 +5,10 @@ build:
 
 run:
 	@echo "──────────"
-	@go run main.go
+	@USE_LOCAL_SCHEMA=true go run main.go
 	@echo "──────────"
 
 debug:
 	@echo "──────────"
-	@go run main.go --debug
+	@USE_LOCAL_SCHEMA=true go run main.go --debug
 	@echo "──────────"
