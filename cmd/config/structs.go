@@ -8,7 +8,8 @@ import (
 )
 
 type Project struct {
-	Tools []ToolJson `mapstructure:"tools"`
+	Tools    []ToolJSON    `mapstructure:"tools"`
+	Commands []CommandJSON `mapstructure:"commands"`
 }
 
 type Tool interface {
@@ -17,9 +18,9 @@ type Tool interface {
 	AttemptInstall() error
 }
 
-// ToolJson is the raw map that data is loaded into as JSON. Use `ParseTool` to convert this into an
+// ToolJSON is the raw map that data is loaded into as JSON. Use `ParseTool` to convert this into an
 // object you can work with
-type ToolJson map[string]interface{}
+type ToolJSON map[string]interface{}
 
 type ToolType string
 
@@ -29,7 +30,7 @@ const (
 )
 
 // Parse tool returns a tool that includes operations like validate
-func ParseTool(toolJson ToolJson) Tool {
+func ParseTool(toolJson ToolJSON) Tool {
 	typeField, hasTypeField := toolJson["type"]
 	if !hasTypeField {
 		typeField = TOOL_TYPE_BASE
@@ -47,4 +48,35 @@ func ParseTool(toolJson ToolJson) Tool {
 		log.CheckFatal(fmt.Errorf("tool.type was not %s (was %s)", TOOL_TYPE_BASE, typeStr))
 		return nil
 	}
+}
+
+type CommandJSON struct {
+	Name    string      `mapstructure:"name"`
+	Command interface{} `mapstructure:"command"`
+}
+
+type Command struct {
+	Name    string
+	Command []string
+}
+
+// Parse commmand returns a tool with fields resolved
+func ParseCommand(cmdJSON CommandJSON) Command {
+	if str, ok := cmdJSON.Command.(string); ok {
+		return Command{
+			Name:    cmdJSON.Name,
+			Command: []string{str},
+		}
+	} else if array, ok := cmdJSON.Command.([]interface{}); ok {
+		strings := []string{}
+		for _, item := range array {
+			strings = append(strings, item.(string))
+		}
+		return Command{
+			Name:    cmdJSON.Name,
+			Command: strings,
+		}
+	}
+	log.CheckFatal(fmt.Errorf("command.[*].type needs to be a string or []string, not %T", cmdJSON.Command))
+	return Command{}
 }

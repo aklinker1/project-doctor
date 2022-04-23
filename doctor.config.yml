@@ -9,6 +9,7 @@ tools:
       apt: sudo apt install golang-1.17.1
       apt-get: sudo install golang-1.17.1
       brew: brew install golang
+
   - name: NodeJS v14
     executable: node
     getVersion: node --version
@@ -21,19 +22,19 @@ tools:
       brew: brew install golang
     changeVersions:
       nvm: nvm use 14
-#
-# commands:
-#   - name: Compile executable
-#     command: [make, make b, make build]
-#
-#   - name: Run against the repo's doctor.config.yml
-#     command: [make r, make run]
-#
-#   - name: Same as run, but print all debug logs
-#     command: [make r, make run]
-#
-#   - name: Run against a specific config
-#     command: go run main.go -c examples/node.yml
-#
-#   - name: Cleanup the application's dependencies
-#     command: go mod tidy
+
+commands:
+  - name: Compile executable
+    command: [make, make b, make build]
+
+  - name: Run against the repo's doctor.config.yml
+    command: [make r, make run]
+
+  - name: Same as run, but print all debug logs
+    command: make debug
+
+  - name: Run against a specific config
+    command: go run main.go -c examples/node.yml
+
+  - name: Cleanup the application's dependencies
+    command: go mod tidy

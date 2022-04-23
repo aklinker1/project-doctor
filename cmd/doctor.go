@@ -15,8 +15,18 @@ func doctor(cmd *cobra.Command, args []string) {
 	println()
 
 	fmt.Println(log.SectionHeader("Tools"))
+	toolsSection()
+	println()
+
+	fmt.Println(log.SectionHeader("Commands"))
+	commandsSection()
+}
+
+func toolsSection() {
 	project := config.ProjectConfig
 	toolErrors := []error{}
+
+	println()
 	for _, toolJson := range project.Tools {
 		tool := config.ParseTool(toolJson)
 		status := tool.DisplayName
@@ -27,10 +37,10 @@ func doctor(cmd *cobra.Command, args []string) {
 		err := tool.Verify()
 		stop(err)
 
-		// if errors.Is(err, config.NotInPathError) {
-		// 	fmt.Println("    Not installed")
-		// 	err = tool.AttemptInstall()
-		// }
+		if errors.Is(err, config.NotInPathError) {
+			fmt.Println("    Not installed")
+			err = tool.AttemptInstall()
+		}
 		if errors.Is(err, config.WrongVersionError) {
 			fmt.Printf("    Installed version: %s\n", config.AsWrongVersionError(err).InstalledVersion)
 		}
@@ -44,6 +54,20 @@ func doctor(cmd *cobra.Command, args []string) {
 		if len(toolErrors) == 1 {
 			plural = ""
 		}
-		log.CheckFatal(fmt.Errorf("Found problems%s with %d tool%s", plural, len(toolErrors), plural))
+		log.CheckFatal(
+			fmt.Errorf("Found problems%s with %d tool%s", plural, len(toolErrors), plural),
+		)
+	}
+}
+
+func commandsSection() {
+	project := config.ProjectConfig
+	for _, command := range project.Commands {
+		println()
+		cmd := config.ParseCommand(command)
+		fmt.Println(log.Dim("  " + log.Italic(command.Name)))
+		for _, c := range cmd.Command {
+			fmt.Println(log.Dim("  │ ") + c)
+		}
 	}
 }
