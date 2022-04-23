@@ -25,10 +25,10 @@ tools:
 
 commands:
   - name: Compile executable
-    command: [make, make b, make build]
+    command: [make, make build]
 
   - name: Run against the repo's doctor.config.yml
-    command: [make r, make run]
+    command: make run
 
   - name: Same as run, but print all debug logs
     command: make debug
