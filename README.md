@@ -1,7 +1,7 @@
 <h1 align="center">👩‍⚕️ Project Doctor 🧑‍⚕️</h1>
 
 <p align="center">The beautiful new way to <strong>validate</strong>, <strong>setup</strong>, and <strong>document</strong> a project's local dev environment!</p>
-<p align="center">✨ Inspired by <code>flutter doctor</code> ✨</p>
+<p align="center"><i>✨ Inspired by <code>flutter doctor</code> ✨</i></p>
 
 ```yaml
 # Specify required tools and how to install them
@@ -28,14 +28,18 @@ commands:
 
 Running `doctor` will:
 
-- Ensure you have the required tools on your path
+- Ensure you have the required tools on your path or install them if possible
 - Validate that all required but gitignored files are present
 - Print useful commands new developers can explore to get started
 
-```bash
-$ doctor
-# TODO include output/GIF
-```
+![Project Doctor Demo](.github/assets/demo.gif)
+
+### Roadmap
+
+- [x] ~~_Validate or install tools_~~ `v1.0.0`
+- [ ] Print getting started commands
+- [ ] Configure gitignored files
+- [ ] Tooling presets
 
 #### Why not just containerize?
 
