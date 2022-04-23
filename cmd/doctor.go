@@ -12,20 +12,20 @@ import (
 func doctor(cmd *cobra.Command, args []string) {
 	fmt.Printf(log.Title("Project Doctor: %s\n"), config.Dirname())
 	fmt.Println(log.Dim("Checking up on your local development environment"))
-	println()
 
-	fmt.Println(log.SectionHeader("Tools"))
 	toolsSection()
-	println()
-
-	fmt.Println(log.SectionHeader("Commands"))
 	commandsSection()
 }
 
 func toolsSection() {
 	project := config.ProjectConfig
-	toolErrors := []error{}
+	if len(project.Tools) == 0 {
+		return
+	}
 
+	toolErrors := []error{}
+	println()
+	fmt.Println(log.SectionHeader("Tools"))
 	println()
 	for _, toolJson := range project.Tools {
 		tool := config.ParseTool(toolJson)
@@ -62,6 +62,12 @@ func toolsSection() {
 
 func commandsSection() {
 	project := config.ProjectConfig
+	if len(project.Commands) == 0 {
+		return
+	}
+
+	println()
+	fmt.Println(log.SectionHeader("Commands"))
 	for _, command := range project.Commands {
 		println()
 		cmd := config.ParseCommand(command)
