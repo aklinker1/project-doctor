@@ -58,25 +58,9 @@ func validateProject(allConfig map[string]interface{}) error {
 
 func loadSchema(ctx context.Context) error {
 	log.Debug("Fetching schema from: %s", schemaUrl)
-	if schema != nil {
-		log.Debug("Schema has already been fetched")
-		return nil
-	}
-
-	var bytes []byte
-	var err error
-	if UseLocalSchema {
-		bytes, err = getLocalSchema()
-	} else {
-		bytes, err = getRemoteSchema(ctx)
-	}
-	if err != nil {
-		return err
-	}
-
-	log.Debug("JSON Schema: %s", strings.TrimSpace(string(bytes)))
+	log.Debug("JSON Schema: %s", strings.TrimSpace(string(JSONSchema)))
 	schema = &jsonschema.Schema{}
-	return json.Unmarshal(bytes, schema)
+	return json.Unmarshal(JSONSchema, schema)
 }
 
 func getRemoteSchema(ctx context.Context) ([]byte, error) {

@@ -82,7 +82,7 @@ Just add the "`"$schema"` field to your config
 ```jsonc
 // doctor.config.json
 {
-  "$schema": "https://raw.githubusercontent.com/aklinker1/project-doctor/main/api/schema.json"
+  "$schema": "https://raw.githubusercontent.com/aklinker1/project-doctor/main/cmd/config/schema.json"
   // ...
 }
 ```
@@ -97,7 +97,7 @@ Editors don't have a standard way of using schemas for YAML files like JSON. Ins
 // settings.json
 {
   "yaml.schemas": {
-    "https://raw.githubusercontent.com/aklinker1/project-doctor/main/api/schema.json": "path/to/doctor.config.yml"
+    "https://raw.githubusercontent.com/aklinker1/project-doctor/main/cmd/config/schema.json": "path/to/doctor.config.yml"
   }
 }
 ```
