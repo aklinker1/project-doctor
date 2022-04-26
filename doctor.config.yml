@@ -1,5 +1,6 @@
 tools:
-  - name: Go v17
+  - type: tool
+    name: Go v17
     executable: go
     getVersion: go version
     versionRegex: go1\.17\.
@@ -10,7 +11,8 @@ tools:
       apt-get: sudo install golang-1.17.1
       brew: brew install golang
 
-  - name: NodeJS v14
+  - type: tool
+    name: NodeJS v14
     executable: node
     getVersion: node --version
     versionRegex: ^v14

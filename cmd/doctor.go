@@ -27,8 +27,8 @@ func toolsSection() {
 	println()
 	fmt.Println(log.SectionHeader("Tools"))
 	println()
-	for _, toolJson := range project.Tools {
-		tool := config.ParseTool(toolJson)
+	for _, check := range project.Tools {
+		tool := config.ParseCheck(check)
 		status := tool.DisplayName
 
 		// Do the work
@@ -39,7 +39,7 @@ func toolsSection() {
 
 		if errors.Is(err, config.NotInPathError) {
 			fmt.Println("    Not installed")
-			err = tool.AttemptInstall()
+			err = tool.Fix()
 		}
 		if errors.Is(err, config.WrongVersionError) {
 			fmt.Printf("    Installed version: %s\n", config.AsWrongVersionError(err).InstalledVersion)

@@ -1,6 +1,14 @@
 package config
 
-type ICheck interface {
+import (
+	"errors"
+	"fmt"
+
+	"github.com/aklinker1/project-doctor/cmd/log"
+	"github.com/mitchellh/mapstructure"
+)
+
+type Check interface {
 	// DisplayName shown in the console
 	DisplayName() string
 	// Verify that the check is passing
@@ -9,8 +17,21 @@ type ICheck interface {
 	Fix() error
 }
 
-type Check struct {
-	Type string `mapstructure:"type"`
-	InstalledTool
-	// Preset
+// Parse tool returns a tool that includes operations like validate
+func ParseCheck(check map[string]interface{}) Check {
+	checkType, hasType := check["type"]
+	if !hasType {
+		log.CheckFatal(errors.New("Check must have a 'type' field"))
+	}
+
+	switch checkType {
+	case "tool":
+		tool := InstalledTool{}
+		err := mapstructure.Decode(check, &tool)
+		log.CheckFatal(err)
+		return tool
+	}
+
+	log.CheckFatal(fmt.Errorf("Unknown check.type = '%s'", checkType))
+	return InstalledTool{}
 }

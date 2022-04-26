@@ -16,7 +16,7 @@
             "required": ["executable", "installUrls"],
             "properties": {
               "type": {
-                "type": "null"
+                "const": "tool"
               },
               "name": {
                 "type": "string"

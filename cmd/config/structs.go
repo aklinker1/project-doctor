@@ -4,45 +4,16 @@ import (
 	"fmt"
 
 	"github.com/aklinker1/project-doctor/cmd/log"
-	"github.com/mitchellh/mapstructure"
 )
 
 type Project struct {
-	Tools    []ToolJSON    `mapstructure:"tools"`
-	Commands []CommandJSON `mapstructure:"commands"`
+	Tools    []map[string]interface{} `mapstructure:"tools"`
+	Commands []CommandJSON            `mapstructure:"commands"`
 }
 
 // ToolJSON is the raw map that data is loaded into as JSON. Use `ParseTool` to convert this into an
 // object you can work with
 type ToolJSON map[string]interface{}
-
-type ToolType string
-
-const (
-	TOOL_TYPE_BASE   ToolType = "base"
-	TOOL_TYPE_PRESET ToolType = "preset"
-)
-
-// Parse tool returns a tool that includes operations like validate
-func ParseTool(toolJson ToolJSON) Tool {
-	typeField, hasTypeField := toolJson["type"]
-	if !hasTypeField {
-		typeField = TOOL_TYPE_BASE
-	}
-	typeStr, ok := typeField.(ToolType)
-	if !ok {
-		log.CheckFatal(fmt.Errorf("Unknown tool.type = %+v", typeField))
-	}
-	switch typeStr {
-	case TOOL_TYPE_BASE:
-		raw := InstalledTool{}
-		mapstructure.Decode(toolJson, &raw)
-		return raw
-	default:
-		log.CheckFatal(fmt.Errorf("tool.type was not %s (was %s)", TOOL_TYPE_BASE, typeStr))
-		return nil
-	}
-}
 
 type CommandJSON struct {
 	Name    string      `mapstructure:"name"`
