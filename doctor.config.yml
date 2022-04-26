@@ -1,4 +1,4 @@
-tools:
+checks:
   - type: tool
     name: Go v17
     executable: go

@@ -12,7 +12,7 @@ type wrongVersionError struct {
 
 var WrongVersionError = &wrongVersionError{}
 
-func NewWrongVersionError(tool InstalledTool, installedVersion string) error {
+func NewWrongVersionError(tool ToolCheck, installedVersion string) error {
 	return &wrongVersionError{
 		executable:           tool.Executable,
 		expectedVersionRegex: tool.VersionRegex,

@@ -5,7 +5,7 @@
   "type": "object",
   "additionalProperties": false,
   "properties": {
-    "tools": {
+    "checks": {
       "type": "array",
       "items": {
         "oneOf": [

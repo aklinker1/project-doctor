@@ -26,12 +26,12 @@ func ParseCheck(check map[string]interface{}) Check {
 
 	switch checkType {
 	case "tool":
-		tool := InstalledTool{}
+		tool := ToolCheck{}
 		err := mapstructure.Decode(check, &tool)
 		log.CheckFatal(err)
 		return tool
 	}
 
 	log.CheckFatal(fmt.Errorf("Unknown check.type = '%s'", checkType))
-	return InstalledTool{}
+	return ToolCheck{}
 }
