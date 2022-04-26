@@ -10,7 +10,7 @@
       "items": {
         "oneOf": [
           {
-            "title": "BaseTool",
+            "title": "InstalledTool",
             "type": "object",
             "additionalProperties": false,
             "required": ["executable", "installUrls"],

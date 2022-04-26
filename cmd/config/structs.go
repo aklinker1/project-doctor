@@ -12,12 +12,6 @@ type Project struct {
 	Commands []CommandJSON `mapstructure:"commands"`
 }
 
-type Tool interface {
-	Verify() error
-	DisplayName() string
-	AttemptInstall() error
-}
-
 // ToolJSON is the raw map that data is loaded into as JSON. Use `ParseTool` to convert this into an
 // object you can work with
 type ToolJSON map[string]interface{}
@@ -41,7 +35,7 @@ func ParseTool(toolJson ToolJSON) Tool {
 	}
 	switch typeStr {
 	case TOOL_TYPE_BASE:
-		raw := BaseTool{}
+		raw := InstalledTool{}
 		mapstructure.Decode(toolJson, &raw)
 		return raw
 	default:

@@ -12,7 +12,7 @@ var (
 	NotInPathError = errors.New("Executable is not in your $PATH")
 )
 
-type BaseTool struct {
+type InstalledTool struct {
 	Name string `mapstructure:"name"`
 
 	Executable     string            `mapstructure:"executable"`
@@ -28,13 +28,13 @@ type BaseTool struct {
 	PackageManagers map[string]string `mapstructure:"packageManagers"`
 }
 
-func (tool BaseTool) Verify() error {
+func (tool InstalledTool) Verify() error {
 	defaultShell := exec.Shell()
 
 	return tool.verifyShell(defaultShell)
 }
 
-func (tool BaseTool) verifyShell(shell string) error {
+func (tool InstalledTool) verifyShell(shell string) error {
 	// Check installation
 	toolPath := exec.Which(shell, tool.Executable)
 	if toolPath == "" {
@@ -62,13 +62,13 @@ func (tool BaseTool) verifyShell(shell string) error {
 	return nil
 }
 
-func (tool BaseTool) DisplayName() string {
+func (tool InstalledTool) DisplayName() string {
 	if tool.Name != "" {
 		return tool.Name
 	}
 	return tool.Executable
 }
 
-func (tool BaseTool) AttemptInstall() error {
+func (tool InstalledTool) Fix() error {
 	return nil
 }
