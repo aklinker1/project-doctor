@@ -36,13 +36,6 @@ Running `doctor` will:
 
 ![Project Doctor Demo](.github/assets/demo.gif)
 
-### Roadmap
-
-- [x] ~~_Validate or install tools_~~ `v1.0.0`
-- [x] ~~_Print getting started commands_~~ Not released
-- [ ] Configure gitignored files
-- [ ] Envrionment/language presets
-
 #### Why not just containerize?
 
 Not all projects can be built in docker containers, like iOS apps, and others can be hard to setup. Other times you're working on a simple project and dockerizing it is just overkill.
