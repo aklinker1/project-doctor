@@ -4,17 +4,15 @@
 <p align="center"><i>✨ Inspired by <code>flutter doctor</code> ✨</i></p>
 
 ```yaml
-# Specify required tools and how to install them
-tools:
-  - name: NodeJS
-    preset: node
+checks:
+  # Validate executables are in your path
+  - preset: node
     version: 14
-
-# Generate any gitignored files
-files:
-  - name: .env
-    description: A file containing all the environment variables to configure and run the project locally
-    template: .env.template
+  # Run custom scripts
+  - type: script
+    description: Ensure AWS is installed and logged in
+    run: aws sts get-caller-identity
+  # And more!
 
 # Document useful commands
 commands:
@@ -28,8 +26,12 @@ commands:
 
 Running `doctor` will:
 
-- Ensure you have the required tools on your path or install them if possible
-- Validate that all required but gitignored files are present
+- Run a series of checks against your local environment, such as:
+  - Standardized presets to setup entire dev environments/languages
+  - Make sure executables are in your path (or install them if they're not)
+  - Run custom shell scripts
+  - Ensure local services are installed and running (like PostgreSQL or Redis)
+  - Create and fill out gitignored files based on templates
 - Print useful commands new developers can explore to get started
 
 ![Project Doctor Demo](.github/assets/demo.gif)
@@ -37,9 +39,9 @@ Running `doctor` will:
 ### Roadmap
 
 - [x] ~~_Validate or install tools_~~ `v1.0.0`
-- [ ] Print getting started commands
+- [x] ~~_Print getting started commands_~~ Not released
 - [ ] Configure gitignored files
-- [ ] Tooling presets
+- [ ] Envrionment/language presets
 
 #### Why not just containerize?
 
@@ -54,7 +56,8 @@ Download and run the installer script to install the `doctor` command:
 <!-- One line installers stolen from docker-compose -->
 
 ```bash
-sudo curl -L "https://github.com/aklinker1/project-doctor/releases/download/latest/doctor-$(uname -s)-$(uname -m)" -o /usr/local/bin/doctor
+sudo curl -L "https://github.com/aklinker1/project-doctor/releases/download/latest/doctor-$(uname -s)-$(uname -m)" \
+  -o /usr/local/bin/doctor
 ```
 
 > You can download specific versions of `doctor` by replacing `latest` with `vX.Y.Z` in the URL
