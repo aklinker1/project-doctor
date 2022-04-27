@@ -1,7 +1,5 @@
 build:
-	@echo
-	@go build -o bin/doctor main.go
-	@echo
+	go build -o bin/doctor main.go
 
 run:
 	@echo "──────────"
