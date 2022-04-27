@@ -26,7 +26,7 @@ func checksSection() error {
 
 	checkErrors := []error{}
 	println()
-	fmt.Println(log.SectionHeader("Tools"))
+	fmt.Println(log.SectionHeader("Checks"))
 	println()
 	for _, check := range project.Checks {
 		status := check.DisplayName
