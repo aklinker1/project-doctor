@@ -4,8 +4,8 @@ import (
 	"os/exec"
 	"strings"
 
-	"github.com/aklinker1/project-doctor/cmd/log"
-	"github.com/aklinker1/project-doctor/cmd/utils"
+	"github.com/aklinker1/project-doctor/cli/log"
+	"github.com/aklinker1/project-doctor/cli/utils"
 )
 
 func Command(shell string, command ...string) (string, error) {

@@ -3,7 +3,7 @@ package exec
 import (
 	"fmt"
 
-	"github.com/aklinker1/project-doctor/cmd/log"
+	"github.com/aklinker1/project-doctor/cli/log"
 )
 
 func Which(shell string, executable string) string {

@@ -1,14 +1,11 @@
-/*
-Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-
-*/
-package cmd
+package commands
 
 import (
 	"os"
 
-	"github.com/aklinker1/project-doctor/cmd/config"
-	"github.com/aklinker1/project-doctor/cmd/log"
+	"github.com/aklinker1/project-doctor/cli/config"
+	"github.com/aklinker1/project-doctor/cli/errors"
+	"github.com/aklinker1/project-doctor/cli/log"
 	"github.com/spf13/cobra"
 )
 
@@ -30,8 +27,8 @@ func Execute() {
 	println()
 	err := rootCmd.Execute()
 	println()
-	if err != nil {
-		os.Exit(1)
+	if exitCode := errors.ExitCode(err); exitCode != 0 {
+		os.Exit(0)
 	}
 }
 

@@ -4,8 +4,8 @@ import (
 	"errors"
 	"regexp"
 
-	"github.com/aklinker1/project-doctor/cmd/exec"
-	"github.com/aklinker1/project-doctor/cmd/log"
+	"github.com/aklinker1/project-doctor/cli/exec"
+	"github.com/aklinker1/project-doctor/cli/log"
 )
 
 var (

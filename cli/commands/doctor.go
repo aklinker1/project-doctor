@@ -1,11 +1,11 @@
-package cmd
+package commands
 
 import (
 	"errors"
 	"fmt"
 
-	"github.com/aklinker1/project-doctor/cmd/config"
-	"github.com/aklinker1/project-doctor/cmd/log"
+	"github.com/aklinker1/project-doctor/cli/config"
+	"github.com/aklinker1/project-doctor/cli/log"
 	"github.com/spf13/cobra"
 )
 

@@ -10,7 +10,7 @@ import (
 	"path"
 	"strings"
 
-	"github.com/aklinker1/project-doctor/cmd/log"
+	"github.com/aklinker1/project-doctor/cli/log"
 	jsoniter "github.com/json-iterator/go"
 	"github.com/qri-io/jsonschema"
 )

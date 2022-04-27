@@ -3,7 +3,7 @@ package config
 import (
 	"fmt"
 
-	"github.com/aklinker1/project-doctor/cmd/log"
+	"github.com/aklinker1/project-doctor/cli/log"
 )
 
 type Project struct {

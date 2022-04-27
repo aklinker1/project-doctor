@@ -1,7 +1,7 @@
 package exec
 
 import (
-	"github.com/aklinker1/project-doctor/cmd/log"
+	"github.com/aklinker1/project-doctor/cli/log"
 	"github.com/riywo/loginshell"
 )
 
