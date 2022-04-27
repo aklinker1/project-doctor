@@ -11,20 +11,6 @@ checks:
       apt-get: sudo install golang-1.17.1
       brew: brew install golang
 
-  - type: tool
-    name: NodeJS v14
-    executable: node
-    getVersion: node --version
-    versionRegex: ^v14
-    installUrls:
-      default: https://go.dev/blog/go1.18beta2
-    installOptions:
-      apt: sudo apt install golang-1.17.1]
-      apt-get: sudo apt-get install golang-1.17.1]
-      brew: brew install golang
-    changeVersions:
-      nvm: nvm use 14
-
 commands:
   - name: Compile executable
     run: [make, make build]
