@@ -3,8 +3,8 @@ package commands
 import (
 	"os"
 
+	"github.com/aklinker1/project-doctor/cli"
 	"github.com/aklinker1/project-doctor/cli/config"
-	"github.com/aklinker1/project-doctor/cli/errors"
 	"github.com/aklinker1/project-doctor/cli/log"
 	"github.com/spf13/cobra"
 )
@@ -27,7 +27,7 @@ func Execute() {
 	println()
 	err := rootCmd.Execute()
 	println()
-	if exitCode := errors.ExitCode(err); exitCode != 0 {
+	if exitCode := cli.ExitCode(err); exitCode != 0 {
 		os.Exit(0)
 	}
 }

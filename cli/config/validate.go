@@ -10,6 +10,7 @@ import (
 	"path"
 	"strings"
 
+	"github.com/aklinker1/project-doctor/cli"
 	"github.com/aklinker1/project-doctor/cli/log"
 	jsoniter "github.com/json-iterator/go"
 	"github.com/qri-io/jsonschema"
@@ -26,19 +27,34 @@ func validateProject(allConfig map[string]interface{}) error {
 	log.Debug("Validating config: %v", allConfig)
 	bytesToValidate, err := jsoniter.Marshal(allConfig)
 	if err != nil {
-		return err
+		return &cli.Error{
+			ExitCode: cli.EINVALID,
+			Message:  "Failed to marshal config into JSON string",
+			Op:       "config.validateProject",
+			Err:      err,
+		}
 	}
 	log.Debug("Validating config json: %s", string(bytesToValidate))
 
 	err = loadSchema(ctx)
 	if err != nil {
-		return err
+		return &cli.Error{
+			ExitCode: cli.EINVALID,
+			Message:  "Failed to load JSON schema",
+			Op:       "config.validateProject",
+			Err:      err,
+		}
 	}
 
 	errs, err := schema.ValidateBytes(ctx, bytesToValidate)
 	if err != nil {
 		log.Debug("Validation failed: %v", err)
-		return err
+		return &cli.Error{
+			ExitCode: cli.EINVALID,
+			Message:  fmt.Sprintf("Validation failed: %v", err),
+			Op:       "config.validateProject",
+			Err:      err,
+		}
 	}
 	if len(errs) > 0 {
 		fmt.Println(log.Error("Config failed validation:"))
@@ -57,7 +73,6 @@ func validateProject(allConfig map[string]interface{}) error {
 }
 
 func loadSchema(ctx context.Context) error {
-	log.Debug("Fetching schema from: %s", schemaUrl)
 	log.Debug("JSON Schema: %s", strings.TrimSpace(string(JSONSchema)))
 	schema = &jsonschema.Schema{}
 	return json.Unmarshal(JSONSchema, schema)

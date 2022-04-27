@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/aklinker1/project-doctor/cli/errors"
+	"github.com/aklinker1/project-doctor/cli"
 )
 
 func CheckFatal(err error) {
@@ -15,5 +15,5 @@ func CheckFatal(err error) {
 	println()
 	fmt.Fprintf(os.Stderr, Error("%v\n"), err)
 	println()
-	os.Exit(errors.ExitCode(err))
+	os.Exit(cli.ExitCode(err))
 }

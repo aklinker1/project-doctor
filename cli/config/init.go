@@ -32,7 +32,7 @@ func Init() {
 		err = validateProject(projectMap)
 		log.CheckFatal(err)
 
-		ProjectConfig, err = ParseProjectConfig(projectMap)
+		ProjectConfig, err = ParseProject(projectMap)
 		log.CheckFatal(err)
 		log.Debug("Received config: %+v", ProjectConfig)
 	} else {

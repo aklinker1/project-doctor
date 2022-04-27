@@ -3,12 +3,14 @@ package config
 import (
 	"os"
 	"path"
+
+	"github.com/aklinker1/project-doctor/cli"
 )
 
 var (
 	ConfigFile     string
 	Cwd            string
-	ProjectConfig  Project
+	ProjectConfig  cli.Project
 	UseLocalSchema bool
 )
 
