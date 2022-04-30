@@ -1,3 +1,7 @@
+This project is archived, it was a fun idea, but I don't want to be responsible for maintaining this.
+
+---
+
 <h1 align="center">👩‍⚕️ Project Doctor 🧑‍⚕️</h1>
 
 <p align="center">The beautiful new way to <strong>validate</strong>, <strong>setup</strong>, and <strong>document</strong> a project's local dev environment!</p>
