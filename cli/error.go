@@ -39,7 +39,7 @@ func ErrorMessage(err error) string {
 	} else if ok && e.Err != nil {
 		return ErrorMessage(e.Err)
 	}
-	return "An internal error has occurred. Please contact technical support."
+	return err.Error()
 }
 
 // Error returns the string representation of the error message.

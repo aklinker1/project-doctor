@@ -1,20 +1,18 @@
 package exec
 
 import (
-	"github.com/aklinker1/project-doctor/cli/log"
 	"github.com/riywo/loginshell"
 )
 
 var defaultShell string
 
-func Shell() string {
+func Shell() (string, error) {
 	if defaultShell == "" {
 		shell, err := loginshell.Shell()
 		if err != nil {
-			panic(err)
+			return "", err
 		}
-		log.CheckFatal(err)
 		defaultShell = shell
 	}
-	return defaultShell
+	return defaultShell, nil
 }

@@ -16,7 +16,7 @@ commands:
     run: [make, make build]
 
   - name: Run against the repo's doctor.config.yml
-    run: make run
+    run: [make run, SLOW_MO=true make run]
 
   - name: Same as run, but print all debug logs
     run: make debug

@@ -4,8 +4,8 @@ import (
 	"errors"
 	"regexp"
 
+	"github.com/aklinker1/project-doctor/cli"
 	"github.com/aklinker1/project-doctor/cli/exec"
-	"github.com/aklinker1/project-doctor/cli/log"
 )
 
 var (
@@ -28,23 +28,26 @@ type ToolCheck struct {
 	PackageManagers map[string]string `mapstructure:"packageManagers"`
 }
 
-func (tool ToolCheck) Verify() error {
-	defaultShell := exec.Shell()
+func (tool ToolCheck) Verify(ui cli.UI) error {
+	defaultShell, err := exec.Shell()
+	if err != nil {
+		return err
+	}
 
-	return tool.verifyShell(defaultShell)
+	return tool.verifyShell(ui, defaultShell)
 }
 
-func (tool ToolCheck) verifyShell(shell string) error {
+func (tool ToolCheck) verifyShell(ui cli.UI, shell string) error {
 	// Check installation
-	toolPath := exec.Which(shell, tool.Executable)
+	toolPath, _ := exec.Which(ui, shell, tool.Executable)
 	if toolPath == "" {
 		return NotInPathError
 	}
 
 	// Check version
 	if tool.VersionRegex != "" {
-		installedVersion, err := exec.Command(shell, tool.GetVersion)
-		log.Debug("%s's version: %s", tool.Executable, installedVersion)
+		installedVersion, err := exec.Command(ui, shell, tool.GetVersion)
+		ui.Debug("%s's version: %s", tool.Executable, installedVersion)
 		if err != nil {
 			return err
 		}
@@ -52,9 +55,9 @@ func (tool ToolCheck) verifyShell(shell string) error {
 		if err != nil {
 			return err
 		}
-		log.Debug("Comparing %s to /%s/", installedVersion, versionRegex)
+		ui.Debug("Comparing %s to /%s/", installedVersion, versionRegex)
 		if !versionRegex.MatchString(installedVersion) {
-			log.Debug("Version mismatch: %s vs /%s/", installedVersion, versionRegex)
+			ui.Debug("Version mismatch: %s vs /%s/", installedVersion, versionRegex)
 			return NewWrongVersionError(tool, installedVersion)
 		}
 	}
@@ -69,6 +72,6 @@ func (tool ToolCheck) DisplayName() string {
 	return tool.Executable
 }
 
-func (tool ToolCheck) Fix() error {
+func (tool ToolCheck) Fix(ui cli.UI) error {
 	return nil
 }

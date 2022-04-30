@@ -2,17 +2,17 @@ package log
 
 import "github.com/ttacon/chalk"
 
-var TitleStyle = chalk.Bold
-var Title = TitleStyle.TextStyle
+var BoldStyle = chalk.Bold
+var Bold = BoldStyle.TextStyle
 
-var SectionHeaderStyle = chalk.Blue.NewStyle().WithTextStyle(chalk.Bold).WithBackground(chalk.ResetColor)
-var SectionHeader = SectionHeaderStyle.Style
+var BoldBlueStyle = chalk.Blue.NewStyle().WithTextStyle(chalk.Bold).WithBackground(chalk.ResetColor)
+var BoldBlue = BoldBlueStyle.Style
 
-var SuccessStyle = chalk.Green.NewStyle().WithTextStyle(chalk.Bold).WithBackground(chalk.ResetColor)
-var Success = SuccessStyle.Style
+var BoldGreenStyle = chalk.Green.NewStyle().WithTextStyle(chalk.Bold).WithBackground(chalk.ResetColor)
+var BoldGreen = BoldGreenStyle.Style
 
-var ErrorStyle = chalk.Red.NewStyle().WithTextStyle(chalk.Bold).WithBackground(chalk.ResetColor)
-var Error = ErrorStyle.Style
+var BoldRedStyle = chalk.Red.NewStyle().WithTextStyle(chalk.Bold).WithBackground(chalk.ResetColor)
+var BoldRed = BoldRedStyle.Style
 
 var DimStyle = chalk.Dim
 var Dim = DimStyle.TextStyle
@@ -20,5 +20,9 @@ var Dim = DimStyle.TextStyle
 var ItalicStyle = chalk.Italic
 var Italic = ItalicStyle.TextStyle
 
-var LoadingStyle = chalk.Cyan.NewStyle().WithTextStyle(chalk.Bold).WithBackground(chalk.ResetColor)
-var Loading = LoadingStyle.Style
+var DimItalic = func(color string) string {
+	return Italic(Dim(color))
+}
+
+var BoldCyanStyle = chalk.Cyan.NewStyle().WithTextStyle(chalk.Bold).WithBackground(chalk.ResetColor)
+var BoldCyan = BoldCyanStyle.Style

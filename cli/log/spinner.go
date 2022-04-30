@@ -8,7 +8,7 @@ import (
 	"github.com/gosuri/uilive"
 )
 
-func Spinner(frames []string, status func() string) (func(error), func()) {
+func spinner(frames []string, status func() string) (func(error), func()) {
 	frameCount := len(frames)
 	w := uilive.New()
 	w.Start()
@@ -42,21 +42,21 @@ func Spinner(frames []string, status func() string) (func(error), func()) {
 	return stop, func() {
 		position := 0
 		for !isDone() {
-			fmt.Fprintf(w, " %s %s\n", Loading(frames[position]), status())
+			fmt.Fprintf(w, " %s %s\n", BoldCyan(frames[position]), status())
 			time.Sleep(sleepDuration)
 			position = (position + 1) % frameCount
 		}
 		if isSuccess() {
-			fmt.Fprintf(w, Success(" ✔ %s\n"), status())
+			fmt.Fprintf(w, BoldGreen(" ✔ %s\n"), status())
 		} else {
-			fmt.Fprintf(w, Error(" ✘ %s\n"), status())
+			fmt.Fprintf(w, BoldRed(" ✘ %s\n"), status())
 		}
 		w.Stop()
 		wg.Done()
 	}
 }
 
-// BrailSpinner just calls `Spinner` with frames that look like brail
-func BrailSpinner(status func() string) (func(error), func()) {
-	return Spinner([]string{"⣾", "⣽", "⣻", "⢿", "⡿", "⣟", "⣯", "⣷"}, status)
+// brailSpinner just calls `Spinner` with frames that look like brail
+func brailSpinner(status func() string) (func(error), func()) {
+	return spinner([]string{"⣾", "⣷", "⣯", "⣟", "⡿", "⢿", "⣻", "⣽"}, status)
 }

@@ -3,10 +3,15 @@ build:
 
 run:
 	@echo "──────────"
-	@USE_LOCAL_SCHEMA=true go run main.go
+	@go run main.go
 	@echo "──────────"
 
 debug:
 	@echo "──────────"
-	@USE_LOCAL_SCHEMA=true go run main.go --debug
+	@go run main.go --debug
+	@echo "──────────"
+
+test:
+	@echo "──────────"
+	@go test ./cli/...
 	@echo "──────────"
